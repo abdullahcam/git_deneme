@@ -10,6 +10,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: "Github Deneme",
+      home: AppBar(title: Text("Github deneme"),),
     );
   }
 }
