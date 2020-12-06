@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: "Github Deneme",
+      title: "Github Deneme from Fatih",
       home: Scaffold(
         appBar: AppBar(title: Text("git deneme"),),
         body: Container(),
