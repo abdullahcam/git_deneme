@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "511548978047",
+    "project_id": "universiteler-990be",
+    "storage_bucket": "universiteler-990be.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:511548978047:android:c81e2ebe9eb787c063e04a",
+        "android_client_info": {
+          "package_name": "com.abdullahcam.git_deneme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "511548978047-6c8o0aq2j7hklpol2t7blesvep6ira5s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.abdullahcam.git_deneme",
+            "certificate_hash": "d8660d6d0cf535d6a95c72fb05ebe733feb5ef7c"
+          }
+        },
+        {
+          "client_id": "511548978047-ot77bdbrj64d6p9orcnviah2lj0u8mmf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnvxUq0El31gnisZbBRmG93ol2aCYBBVY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "511548978047-ot77bdbrj64d6p9orcnviah2lj0u8mmf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
