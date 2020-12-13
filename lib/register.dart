@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
@@ -14,6 +15,7 @@ class _RegisterSayfasiState extends State<RegisterSayfasi> {
   String _email;
   String _password;
   String _dogumGunu;
+  DateTime selectedDate = DateTime.now();
   final _formKey = GlobalKey<FormState>();
   TextEditingController _emailController;
   TextEditingController _passwordController;
@@ -74,14 +76,16 @@ class _RegisterSayfasiState extends State<RegisterSayfasi> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.all(20),
-                  child: TextFormField(
-                    controller: _dogumGunuController,
-                    decoration: InputDecoration(
-                      hintText: "doğum günü giriniz..",
-                      labelText: "doğum günü",
-                    ),
+                Text(
+                  "${selectedDate.toLocal()}".split(' ')[0],
+                  style: TextStyle(fontSize: 25),
+                ),
+                RaisedButton(
+                  onPressed: () => _selectDate(context), // Refer step 3
+                  child: Text(
+                    'Doğum Tarihinizi Seçiniz',
+                    style: TextStyle(
+                        color: Colors.black, fontStyle: FontStyle.italic),
                   ),
                 ),
                 Row(
@@ -90,7 +94,8 @@ class _RegisterSayfasiState extends State<RegisterSayfasi> {
                     RaisedButton(
                       child: Text(
                         "Oluştur",
-                        style: TextStyle(fontSize: 10),
+                        style: TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold),
                       ),
                       onPressed: kullaniciyiOlustur,
                     ),
@@ -120,7 +125,6 @@ class _RegisterSayfasiState extends State<RegisterSayfasi> {
         dbyeEklenenKullanici["sifre"] = [_password];
         dbyeEklenenKullanici["dogum_gunu"] = [_dogumGunu];
 
-
         _firestore
             .collection("users")
             .doc(_email)
@@ -136,4 +140,90 @@ class _RegisterSayfasiState extends State<RegisterSayfasi> {
       debugPrint("validator'da sıkıntı var");
     }
   }
+
+  _selectDate(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    assert(theme.platform != null);
+    switch (theme.platform) {
+      case TargetPlatform.android:
+      case TargetPlatform.fuchsia:
+      case TargetPlatform.linux:
+      case TargetPlatform.windows:
+        return buildMaterialDatePicker(context);
+      case TargetPlatform.iOS:
+      case TargetPlatform.macOS:
+        return buildCupertinoDatePicker(context);
+    }
+  }
+
+  buildCupertinoDatePicker(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext builder) {
+          return Container(
+            height: MediaQuery.of(context).copyWith().size.height / 3,
+            color: Colors.white,
+            child: CupertinoDatePicker(
+              mode: CupertinoDatePickerMode.date,
+              onDateTimeChanged: (picked) {
+                if (picked != null && picked != selectedDate)
+                  setState(() {
+                    selectedDate = picked;
+                  });
+              },
+              initialDateTime: selectedDate,
+              minimumYear: 1900,
+              maximumYear: 2025,
+            ),
+          );
+        });
+  }
+
+  buildMaterialDatePicker(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2025),
+      initialEntryMode: DatePickerEntryMode.calendar,
+      initialDatePickerMode: DatePickerMode.year,
+      helpText: 'Doğum Tarihinizi Seçiniz',
+      errorFormatText: 'Enter valid date',
+      errorInvalidText: 'Enter date in valid range',
+      fieldLabelText: 'Doğum Tarihiniz',
+      fieldHintText: 'Ay/Gün/Yıl',
+
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.light(),
+          child: child,
+        );
+      },
+    );
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
+  }
 }
+/* _selectDate(BuildContext context) async {
+    final DateTime picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate, // Refer step 1
+      firstDate: DateTime(1900),
+      lastDate: DateTime(2025),
+      helpText: 'Doğum Tarihinizi Seçiniz',
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData.dark(), // This will change to dark theme.
+          child: child,
+        );
+      },
+    );
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+      });
+  }
+
+  */

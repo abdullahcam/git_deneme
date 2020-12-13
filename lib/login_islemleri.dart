@@ -3,8 +3,6 @@ import "package:flutter/material.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import 'package:git_deneme/register.dart';
 import 'package:git_deneme/tercih_robotu.dart';
-import "package:cloud_firestore/cloud_firestore.dart";
-
 
 FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -70,8 +68,8 @@ class _LoginIslemleriState extends State<LoginIslemleri> {
                     ),
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     RaisedButton(
                       child: Text(
