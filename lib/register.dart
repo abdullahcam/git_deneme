@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
+import 'package:date_field/date_field.dart';
 
 FirebaseAuth _auth = FirebaseAuth.instance;
 FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -19,21 +20,18 @@ class _RegisterSayfasiState extends State<RegisterSayfasi> {
   final _formKey = GlobalKey<FormState>();
   TextEditingController _emailController;
   TextEditingController _passwordController;
-  TextEditingController _dogumGunuController;
 
   @override
   void initState() {
     super.initState();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
-    _dogumGunuController = TextEditingController();
   }
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
-    _dogumGunuController.dispose();
     super.dispose();
   }
 
@@ -76,33 +74,26 @@ class _RegisterSayfasiState extends State<RegisterSayfasi> {
                     ),
                   ),
                 ),
-                Text(
-                  "${selectedDate.toLocal()}".split(' ')[0],
-                  style: TextStyle(fontSize: 25),
-                ),
-                RaisedButton(
-                  onPressed: () => _selectDate(context), // Refer step 3
-                  child: Text(
-                    'Doğum Tarihinizi Seçiniz',
-                    style: TextStyle(
-                        color: Colors.black, fontStyle: FontStyle.italic),
+                Padding(
+                  padding: EdgeInsets.all(20),
+                  child: DateTimeField(
+                    selectedDate: selectedDate,
+                    onDateSelected: (DateTime date) {
+                      setState(() {
+                        selectedDate = date;
+                      });
+                    },
+                    lastDate: DateTime(2021),
                   ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    RaisedButton(
-                      child: Text(
-                        "Oluştur",
-                        style: TextStyle(
-                            fontSize: 30, fontWeight: FontWeight.bold),
-                      ),
-                      onPressed: kullaniciyiOlustur,
-                    ),
-                  ],
                 ),
               ],
             ),
+          ),
+          RaisedButton(
+            child: Text(
+              "Oluştur",
+            ),
+            onPressed: kullaniciyiOlustur,
           ),
         ],
       ),
@@ -113,14 +104,15 @@ class _RegisterSayfasiState extends State<RegisterSayfasi> {
     if (_formKey.currentState.validate()) {
       _email = _emailController.text;
       _password = _passwordController.text;
-      _dogumGunu = _dogumGunuController.text;
-      debugPrint("kullanıcı kaydedildi : " + _emailController.text.toString());
+      _dogumGunu = selectedDate.toLocal().toString().split(" ")[0];
 
       try {
         UserCredential _credential = await _auth.createUserWithEmailAndPassword(
             email: _email, password: _password);
         User _yeniUser = _credential.user;
+
         debugPrint(_yeniUser.toString());
+
         Map<String, dynamic> dbyeEklenenKullanici = Map();
         dbyeEklenenKullanici["sifre"] = [_password];
         dbyeEklenenKullanici["dogum_gunu"] = [_dogumGunu];
@@ -139,70 +131,5 @@ class _RegisterSayfasiState extends State<RegisterSayfasi> {
     } else {
       debugPrint("validator'da sıkıntı var");
     }
-  }
-
-  _selectDate(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    assert(theme.platform != null);
-    switch (theme.platform) {
-      case TargetPlatform.android:
-      case TargetPlatform.fuchsia:
-      case TargetPlatform.linux:
-      case TargetPlatform.windows:
-        return buildMaterialDatePicker(context);
-      case TargetPlatform.iOS:
-      case TargetPlatform.macOS:
-        return buildCupertinoDatePicker(context);
-    }
-  }
-
-  buildCupertinoDatePicker(BuildContext context) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext builder) {
-          return Container(
-            height: MediaQuery.of(context).copyWith().size.height / 3,
-            color: Colors.white,
-            child: CupertinoDatePicker(
-              mode: CupertinoDatePickerMode.date,
-              onDateTimeChanged: (picked) {
-                if (picked != null && picked != selectedDate)
-                  setState(() {
-                    selectedDate = picked;
-                  });
-              },
-              initialDateTime: selectedDate,
-              minimumYear: 1900,
-              maximumYear: 2025,
-            ),
-          );
-        });
-  }
-
-  buildMaterialDatePicker(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(1900),
-      lastDate: DateTime(2025),
-      initialEntryMode: DatePickerEntryMode.calendar,
-      initialDatePickerMode: DatePickerMode.year,
-      helpText: 'Doğum Tarihinizi Seçiniz',
-      errorFormatText: 'Enter valid date',
-      errorInvalidText: 'Enter date in valid range',
-      fieldLabelText: 'Doğum Tarihiniz',
-      fieldHintText: 'Ay/Gün/Yıl',
-
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData.light(),
-          child: child,
-        );
-      },
-    );
-    if (picked != null && picked != selectedDate)
-      setState(() {
-        selectedDate = picked;
-      });
   }
 }

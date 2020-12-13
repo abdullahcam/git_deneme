@@ -6,7 +6,6 @@ import 'package:git_deneme/tercih_robotu.dart';
 
 FirebaseAuth _auth = FirebaseAuth.instance;
 
-
 class LoginIslemleri extends StatefulWidget {
   @override
   _LoginIslemleriState createState() => _LoginIslemleriState();
@@ -110,8 +109,11 @@ class _LoginIslemleriState extends State<LoginIslemleri> {
         User oturumAcanUser = (await _auth.signInWithEmailAndPassword(
                 email: _email, password: _password))
             .user;
-        debugPrint("kullanıcı : "+_auth.currentUser.toString()+"giriş yaptı");
-        return Navigator.push(context, MaterialPageRoute(builder: (context)=>TercihRobotu()));
+
+        debugPrint(
+            "kullanıcı : " + _auth.currentUser.toString() + "giriş yaptı");
+        return Navigator.push(
+            context, MaterialPageRoute(builder: (context) => TercihRobotu()));
       } else {
         debugPrint(
             "Oturum açmış kullanıcı zaten var ya da yanlış kullanıcı bilgisi");
