@@ -206,24 +206,3 @@ class _RegisterSayfasiState extends State<RegisterSayfasi> {
       });
   }
 }
-/* _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-      context: context,
-      initialDate: selectedDate, // Refer step 1
-      firstDate: DateTime(1900),
-      lastDate: DateTime(2025),
-      helpText: 'Doğum Tarihinizi Seçiniz',
-      builder: (context, child) {
-        return Theme(
-          data: ThemeData.dark(), // This will change to dark theme.
-          child: child,
-        );
-      },
-    );
-    if (picked != null && picked != selectedDate)
-      setState(() {
-        selectedDate = picked;
-      });
-  }
-
-  */
