@@ -12,50 +12,26 @@ class _UniversitelerState extends State<Universiteler> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Universiteler"),),
-      body:(ListView.builder(
-          itemBuilder: (context, index) {
+      appBar: AppBar(
+        title: Text("Universiteler"),
+      ),
+      body: StreamBuilder(
+        stream:
+            FirebaseFirestore.instance.collection("universiteler").snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return Text("Loading Data.. Please wait..");
+          return ListView.builder(itemCount:snapshot.data.documents.length,itemBuilder: (context, int index) {
             return ListTile(
-              leading: Icon(Icons.school_rounded),
-              title: Text("Bogazici"),
+              leading: Icon(Icons.school),
+              title: Text('${snapshot.data.documents[index]['isim']}\n '
+                  'Minimum Toefl Puanı: ${snapshot.data.documents[index]['min_toefl']} \n'
+                  'Minimum GPA Puanı: ${snapshot.data.documents[index]['min_gpa']} \n'
+                  'Şehir: ${snapshot.data.documents[index]['sehir']}\n'),
+              subtitle: Text('${snapshot.data.documents[index]['bolumler']}'),
             );
-          }
-      )
-
-      )
-      );
-  }
-}
-
-class GetUserGpaAndToefl extends StatelessWidget {
-  final String documentId;
-
-  GetUserGpaAndToefl(this.documentId);
-
-  @override
-  Widget build(BuildContext context) {
-    CollectionReference universiteler = FirebaseFirestore.instance.collection(
-        'universiteler');
-
-    return FutureBuilder<DocumentSnapshot>(
-      future: universiteler.doc(documentId).get(),
-      builder:
-          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        if (snapshot.hasError) {
-          return Text("Something went wrong");
-        }
-
-        if (snapshot.connectionState == ConnectionState.done) {
-          Map<String, dynamic> data = snapshot.data.data();
-          return Text(
-              "Gpa: ${data['min_gpa']} " + "TOEFL: ${data['min_toefl']}");
-        }
-        void toString(){
-          print("Gpa: ${['min_gpa']} " + "TOEFL: ${['min_toefl']}");
-        }
-
-        return Text("loading");
-      },
+          });
+        },
+      ),
     );
   }
 }
