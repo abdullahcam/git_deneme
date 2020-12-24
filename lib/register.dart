@@ -51,6 +51,10 @@ class _RegisterSayfasiState extends State<RegisterSayfasi> {
                   padding: EdgeInsets.all(20),
                   child: TextFormField(
                     controller: _emailController,
+                    showCursor: true,
+                    enableSuggestions: true,
+                    maxLines:1,
+                    keyboardType:TextInputType.emailAddress,
                     decoration: InputDecoration(
                       hintText: "email giriniz..",
                       labelText: "Email",
@@ -68,10 +72,21 @@ class _RegisterSayfasiState extends State<RegisterSayfasi> {
                   padding: EdgeInsets.all(20),
                   child: TextFormField(
                     controller: _passwordController,
+                      showCursor: true,
+                      enableSuggestions: true,
+                      maxLines:1,
+                      keyboardType:TextInputType.visiblePassword,
                     decoration: InputDecoration(
                       hintText: "şifre giriniz..",
                       labelText: "sifre",
                     ),
+                      validator: (girilenDeger) {
+                        if (girilenDeger.length < 5) {
+                          return "sifre en az 6 karakter olmali";
+                        } else {
+                          return null;
+                        }
+                      }
                   ),
                 ),
                 Padding(
